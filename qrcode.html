@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <!-- Include the QRCode.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff8a00, #e52e71);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Card-style Container */
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            padding: 40px 50px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #2d3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* Input and Button Styling */
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus {
+            border-color: #ff8a00;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 138, 0, 0.3);
+        }
+
+        button {
+            background-color: #ff8a00;
+            color: white;
+            padding: 15px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #e52e71;
+            transform: scale(1.05);
+        }
+
+        /* QR Code Image Container */
+        #qrCode {
+            margin-top: 30px;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 30px; /* Ensure space for the hover text */
+            transition: transform 0.3s ease; /* Smooth transition for scaling */
+        }
+
+        #qrCode img {
+            width: 256px; /* Fixed size for QR code */
+            transition: transform 0.3s ease; /* Smooth scale on hover */
+        }
+
+        #qrCode:hover img {
+            transform: scale(1.1); /* Slight scale up on hover */
+        }
+
+        #qrCodeText {
+            display: none; /* Initially hidden */
+            position: absolute;
+            top: 100%; /* Position it below the QR code */
+            left: 50%;
+            transform: translateX(-50%); /* Center the text */
+            background-color: #ff8a00; /* Match the button's background */
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px; /* Match the button's border radius */
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease-in-out;
+            margin-top: 15px; /* Adds space between the QR code and the text */
+        }
+
+        /* Show the text when the QR code image is hovered */
+        #qrCode:hover #qrCodeText {
+            display: block;
+            opacity: 1;
+        }
+
+        #qrCodeText:hover {
+            background-color: #e52e71; /* Change to a darker color on hover */
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <p>Enter some text and generate your QR Code!</p>
+
+        <input type="text" id="textInput" placeholder="Type text here...">
+
+        <button onclick="generateQRCode()">Generate QR Code</button>
+
+        <div id="qrCode"></div>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            const text = document.getElementById('textInput').value;
+
+            // Check if the text is not empty
+            if (text.trim() === "") {
+                alert("Please enter some text to generate QR code.");
+                return;
+            }
+
+            // Generate the QR code using the qrcode library
+            QRCode.toDataURL(text, {
+                width: 256,
+                margin: 2
+            }, function (err, url) {
+                if (err) {
+                    console.error(err);
+                    alert("Failed to generate QR code.");
+                    return;
+                }
+
+                // Display the generated QR code
+                const qrCodeContainer = document.getElementById('qrCode');
+                qrCodeContainer.innerHTML = `<img src="${url}" alt="QR Code">
+                <div id="qrCodeText">${text}</div>`; // Show the text below the QR code
+
+                // Clear the input field after generating the QR code
+                document.getElementById('textInput').value = '';
+            });
+        }
+    </script>
+
+</body>
+</html>
